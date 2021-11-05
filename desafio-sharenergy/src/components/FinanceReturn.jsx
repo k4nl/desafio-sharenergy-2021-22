@@ -8,19 +8,20 @@ import '../css/financeiro.css'
 
 export default function FinanceReturn({ props }) {
   const { data } = props;
-  // const [ newData, setNewData ] = useState([]);
+  const [ newData, setNewData ] = useState([]);
   
-  const fetchImg = () => {
-    const newData = Promise.all(data.map(async ({ numeroCliente, nomeCliente, usinas }) => {
-      const picture = await getUserImg();
-      return {
-        numeroCliente,
-        nomeCliente,
-        usinas,
-        picture: picture.large,
-      }
+  const fetchImg = async () => {
+    const newData = await Promise.all(
+      data.map(async ({ numeroCliente, nomeCliente, usinas }) => {
+        const picture = await getUserImg();
+        return {
+          numeroCliente,
+          nomeCliente,
+          usinas,
+          picture: picture.large,
+        }
     }));
-    console.log(newData);
+    setNewData(newData);
   }
   
 
@@ -56,16 +57,15 @@ export default function FinanceReturn({ props }) {
     }, 0).toFixed(2);
   }
 
-  /*
-  if(!data || !data.picture) {
+  if(!newData) {
     return <Loading />
   }
-  */
+
   return (
     <div className="testing">
-      { data.map(({nomeCliente, usinas, numeroCliente }) => (
+      { newData.map(({nomeCliente, usinas, numeroCliente, picture }) => (
         <div key={ nomeCliente } className="card card-container" style={{width:"23rem"}}>
-          <img src={ apple } alt={ nomeCliente } className="card-img-top client-img"/>
+          <img src={ picture } alt={ nomeCliente } className="card-img-top client-img"/>
           <div className="card-body">
             <div className="card-title text-center">{ nomeCliente }</div>
             <div className="card-text">

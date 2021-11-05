@@ -25,44 +25,44 @@ export default function AddClientForm({ props }) {
     };
   };
 
-  const handleClick = () => {
-    const participacao = parseInt(percentualDeParticipacao);
-    if (participacao > 100) {
+  const checkParticipacao = () => {
+    if(Number(percentualDeParticipacao) > 100) {
       reset('numero de participacao maior que 100');
-    } else {
-      const usinaFound = usinas.find((usina) => usina.usinaId === Number(usinaId));
-      if (usinaFound) {
-        reset('ja existe usina cadastrada para cliente');
-      } else if (usinaId === '' || percentualDeParticipacao === '') {
-        reset('usina ou percentual de participacao invalidos')
-      } else if (usinas.length > 0) {
-        const userFound = usinas.find((usina) => usina.name === name);
-        if(!userFound) {
-          console.log(userFound);
-          setName(usinas[0].name)
-          reset('usuario diferente, primeiro confirmar usuario existente ou limpar os dados')
-        } else {
-          setUsinas([
-            ...usinas,
-            {
-              name,
-              usinaId: Number(usinaId),
-              percentualDeParticipacao: Number(percentualDeParticipacao),
-            },
-          ]);
-        }
-      } else {
-        setDisable(false);
-        setUsinas([
-          ...usinas,
-          {
-            name,
-            usinaId: Number(usinaId),
-            percentualDeParticipacao: Number(percentualDeParticipacao),
-          },
-        ]);
-      };
-    };
+      return false;
+    }
+    if(percentualDeParticipacao === '') {
+      reset('usina ou percentual de participacao invalidos');
+      return false;
+    }
+    return true;
+  }
+
+  const checkUsinaId = () => {
+    const usinaFound = usinas.find((usina) => usina.usinaId === Number(usinaId));
+    if(usinaFound) {
+      reset('ja existe usina cadastrada para cliente');
+      return false;
+    } else if(usinaId === '') {
+      reset('usina ou percentual de participacao invalidos');
+      return false;
+    }
+    return true;
+  }
+  const handleClick = () => {
+    const participacaoValida = checkParticipacao()
+    const usinaValida = checkUsinaId();
+
+    if (participacaoValida && usinaValida){
+      setDisable(false);
+      setUsinas([
+        ...usinas,
+        {
+          name,
+          usinaId: Number(usinaId),
+          percentualDeParticipacao: Number(percentualDeParticipacao),
+        },
+      ]);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -109,7 +109,7 @@ export default function AddClientForm({ props }) {
             <input type="text" value={ name } onChange={ ({ target }) => setName(target.value) } />
           </div>
           <div className="form-input">
-            <label>Usinas:</label>
+            <label>Usina:</label>
             <input type="number" value={ usinaId } onChange={ ({ target }) => setUsinaId(target.value) }/>
           </div>
           <div className="form-input">
