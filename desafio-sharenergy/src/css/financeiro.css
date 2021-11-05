@@ -1,0 +1,17 @@
+.testing {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 50px 50px 10px 50px;
+}
+.client-img {
+  max-width: 128px;
+  max-width: 128px;
+}
+
+.card-container {
+  margin-right: 30px;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+}
